@@ -4,3 +4,5 @@ The code in the repository is used during the Docker training. It contains both 
 
 Adapted from https://github.com/godatadriven/accelerator-docker-exercises with lessons learned from that training.
 
+Associated Powerpoint: https://gdd.li/docker-training-presentation
+
