@@ -63,6 +63,7 @@ def insert_rental():
             "INSERT INTO public.bike_rides (uuid, name, location, created) "
             f"VALUES ('{str(uuid4())}', '{name}', '{location}', 'now()')"
         )
+    conn.commit()
     return "OK"
 
 
