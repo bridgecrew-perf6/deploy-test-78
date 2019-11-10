@@ -10,10 +10,18 @@ def main():
     datapath = os.environ.get("DATA_PATH")
     with open(datapath) as f:
         data = f.readlines()
-        return f"""
-        <p>Read data:</p>
-        <p>{data}</p>
-        """
+
+        result = "<table border='1px solid black'><tr>"
+        for col in data[0].split(","):
+            result += f"<th>{col}</th>"
+        result += "</tr>"
+
+        for row in data[1:]:
+            result += "<tr>"
+            for cell in row.split(","):
+                result += f"<td>{cell}</td>"
+            result += "</tr>"
+        return result
 
 
 if __name__ == "__main__":
