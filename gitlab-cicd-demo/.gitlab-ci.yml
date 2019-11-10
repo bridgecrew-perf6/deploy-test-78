@@ -1,0 +1,22 @@
+stages:
+  - Lint
+  - Build and push
+
+lint:
+  stage: Lint
+  image: hadolint/hadolint:v1.17.2-8-g65736cb-debian
+  script:
+    - hadolint Dockerfile
+
+build:
+  stage: Build and push
+  image: docker:19.03.4
+  services:
+    - docker:19.03.4-dind
+  before_script:
+    - docker login -u $DOCKER_HUB_ID -p "$DOCKER_HUB_PASS"
+  script:
+    - docker build -t fortune .
+    - docker run fortune
+    - docker tag fortune $REPO_NAME
+    - docker push $REPO_NAME
