@@ -38,3 +38,4 @@ hadolint Baddockerfile
 
 - Review the warnings that are shown and their meaning.  
 - Explain the use of hadolint.yml
+
