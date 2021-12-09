@@ -1,5 +1,8 @@
 FROM python:3.7
 
+LABEL "project"="ACME" 
+LABEL "maintainer"="foo"
+
 WORKDIR /app
 
 COPY . .

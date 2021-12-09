@@ -8,9 +8,12 @@ An initial Dockerfile build can be run in `demo_docker_file`
 docker build -t my_app .
 ```
 
+
+
 ## EXPOSE
 
-To show how `EXPOSE` indicates the ports exposed, run `docker inspect IMAGE_NAME` 
+To show how `EXPOSE` indicates the ports exposed, run `docker inspect IMAGE_NAME` for image
+used in `demo_docker_file`
 
 ## ENTRYPOINT & CMD
 
@@ -39,3 +42,8 @@ hadolint Baddockerfile
 - Review the warnings that are shown and their meaning.  
 - Explain the use of hadolint.yml
 
+# If you want to demonstrate build date
+
+```
+LABEL org.label-schema.build-date=$BUILD_DATE
+```
