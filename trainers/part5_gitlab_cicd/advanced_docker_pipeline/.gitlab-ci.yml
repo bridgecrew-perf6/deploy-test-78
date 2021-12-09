@@ -1,0 +1,62 @@
+stages:
+  - test_code
+  - lint_docker
+  - build_docker
+  - deploy
+
+flake8:
+  image: python:3.7
+  stage: test_code
+  script:
+    - pip install -e .[dev]
+    - flake8
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+
+pytest:
+  image: python:3.7
+  stage: test_code
+  script:
+    - pip install -e .[dev]
+    - pytest tests
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+
+docker-lint:
+  image: hadolint/hadolint:latest-debian
+  stage: lint_docker
+  script:
+    - hadolint Dockerfile
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+
+docker-build:
+  image: docker:latest
+  stage: build_docker
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+
+deploy_staging:
+  stage: deploy
+  variables:
+    ENVIRONMENT_NAME: Test
+  script:
+    - echo "Deployed to ${ENVIRONMENT_NAME}"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+
+deploy_production:
+  extends: deploy_staging
+  variables: # this overrides all the variables of the base class
+    ENVIRONMENT_NAME: Production
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: manual
+    - when: never
