@@ -1,0 +1,48 @@
+name: Deploy pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_to_environment:
+        description: "Deploy to which environment? [Tst/Prd]"
+        required: true
+        default: "Tst"
+
+jobs:
+  deploy_tst:
+    name: Deploy to Test
+    if: ${{ github.event.inputs.deploy_to_environment == 'Tst' }}
+    runs-on: ubuntu-latest
+    env:
+      TST_REGISTRY_NAME: "crdeploycontainer"
+      TST_ACR_RESOURCE_GROUP: "travis-container-deploy"
+      TST_APP_NAME: "travis-app"
+      RESOURCE_GROUP: "travis-container-deploy"
+    steps:
+      - name: "Checkout GitHub Action"
+        uses: actions/checkout@main
+
+      - name: "Service Principal Login"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.TST_AZURE_CREDENTIALS }}
+
+      - name: "Login to ACR"
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.TST_REGISTRY_NAME }}.azurecr.io
+          username: ${{ secrets.TST_SP_CLIENT_ID }}
+          password: ${{ secrets.TST_SP_SECRET }}
+
+      - name: "Build image"
+        run: |
+          docker build . -t ${{ env.TST_REGISTRY_NAME }}.azurecr.io/${{ env.TST_APP_NAME }}:${{ github.sha }}
+      - name: "Test image"
+        run: |
+          echo "do some testing here"
+      - name: "Push image"
+        run: |
+          docker push ${{ env.TST_REGISTRY_NAME }}.azurecr.io/${{ env.TST_APP_NAME }}:${{ github.sha }}
+      - name: "Pull image"
+        run: |
+          docker pull ${{ env.TST_REGISTRY_NAME }}.azurecr.io/${{ env.TST_APP_NAME }}:${{ github.sha }}
