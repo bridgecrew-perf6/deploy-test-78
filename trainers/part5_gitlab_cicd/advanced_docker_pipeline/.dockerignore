@@ -1,9 +1,0 @@
-Dockerfile
-README.md
-Makefile
-tests
-
-__pycache__
-.mypy_cache
-.pytest_cache
-.vscode
