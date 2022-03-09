@@ -10,7 +10,7 @@ This material was originally adapted from https://github.com/godatadriven/accele
 
 Associated Powerpoint: https://gdd.li/docker-training-presentation (note: ensure you're logged in otherwise you get a typical useless Microsoft error).
 
-## Setup
+## Setup!
 
 Ideally participants are able to configure Docker on their development machines but this tends to go wrong on Windows machines
 and it is recommended to get folk setup with [Google Cloud Platform](https://cloud.google.com/shell).  There are setup instructions for this in `participants/README.md`.  If this is a tool you'll be using it is recommended to run through the exercises in this editor
